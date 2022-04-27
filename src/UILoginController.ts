@@ -7,14 +7,17 @@
 
 import { enableStylesheetExtension, disableStylesheetExtension } from "./StylesheetExtensions";
 import { I18n } from "./I18n";
-import { UILanguagePicker } from "./UILanguagePicker";
+// import { UILanguagePicker } from "./UILanguagePicker";
 import { openSettings } from "./UISettings";
-import { getPref } from "./StoragePreferences";
+// import { getPref } from "./StoragePreferences";
 import { loginPage } from "./DataMustaches";
+
+const { mtdBaseURL, html } = window;
+let { loginIntervalTick, loginInterval, signinSheetPings } = window
 
 let ugltStarted = false;
 window.loginIntervalTick = 0;
-let loginInterval;
+// let loginInterval;
 
 // Updates the "Good morning" / "Good afternoon" / "Good evening"
 // text on the login screen every once in a while (10s, ish)
@@ -70,22 +73,22 @@ export function checkIfSigninFormIsPresent() {
 	if ($(".app-signin-form").length > 0 || $("body>.js-app-loading.login-container:not([style])").length > 0) {
 		html.addClass("signin-sheet-now-present");
 
-		window.loginIntervalTick++;
+		loginIntervalTick++;
 		enableStylesheetExtension("loginpage");
 
-		if (window.loginIntervalTick > 5) {
-			clearInterval(window.loginInterval);
+		if (loginIntervalTick > 5) {
+			clearInterval(loginInterval);
 		}
 	} else {
-		if (typeof window.signinSheetPings === "undefined") {
-			window.signinSheetPings = 0;
+		if (typeof signinSheetPings === "undefined") {
+			signinSheetPings = 0;
 		}
 
-		window.signinSheetPings++;
+		signinSheetPings++;
 
-		if (window.signinSheetPings > 6) {
+		if (signinSheetPings > 6) {
 			console.log("I am no longer asking");
-			clearInterval(window.loginInterval);
+			clearInterval(loginInterval);
 		}
 		console.log("Not on signin sheet anymore");
 		disableStylesheetExtension("loginpage");
@@ -103,6 +106,6 @@ export function loginTextReplacer() {
 		$(".login-container .startflow").html(loginPage);
 		startUpdateGoodLoginText();
 
-		$(".mtd-login-info-button").click(() => openSettings(undefined, true))
+		$(".mtd-login-info-button").on('click', () => openSettings(undefined, true))
 	}
 }

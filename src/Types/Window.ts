@@ -95,6 +95,10 @@ declare global {
         mtd_nav_drawer: HTMLElement;
         languageData: {};
         loginInterval: any;
+
+        // these can be undefined it seems? (they're not defined/initialized anywhere else other than UILoginController)
+        loginIntervalTick: number | undefined;
+        signinSheetPings: number | undefined;
     }
 }
 
